@@ -6,11 +6,11 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuth: false,
+  isAuth: true, //todo: implement after auth mechanism
   token: "",
 };
 const authSlice = createSlice({
-  name: "Auth",
+  name: "auth",
   initialState,
   reducers: {
     setAuth: (state, action) => {

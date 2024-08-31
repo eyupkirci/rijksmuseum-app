@@ -9,7 +9,7 @@ const initialState: AppState = {
 };
 
 const appSlice = createSlice({
-  name: "App",
+  name: "app",
   initialState,
   reducers: {
     setLoading(state, action: PayloadAction<boolean>) {
