@@ -1,5 +1,3 @@
-// import "./App.css";
-
 import { useSelector } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { RootState } from "../redux";

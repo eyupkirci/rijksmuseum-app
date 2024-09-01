@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = import.meta.env.BASE_URL;
-const API_KEY = import.meta.env.API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -13,6 +13,9 @@ export const apiSlice = createApi({
     fetchArtworks: builder.query({
       query: (query: string) => `collection?key=${API_KEY}&q=${query}`,
     }),
+    fetchArtworksByMaker: builder.query({
+      query: (query: string) => `collection?key=${API_KEY}&involvedMaker=${query}`,
+    }),
     // Define an endpoint to fetch details of a specific artwork
     fetchArtworkById: builder.query({
       query: (id: string) => `collection/${id}?key=${API_KEY}`,
@@ -20,4 +23,5 @@ export const apiSlice = createApi({
   }),
 });
 
-export const { useFetchArtworksQuery, useFetchArtworkByIdQuery } = apiSlice;
+export const { useFetchArtworksQuery, useFetchArtworkByIdQuery, useFetchArtworksByMakerQuery } =
+  apiSlice;
