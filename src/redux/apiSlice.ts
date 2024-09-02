@@ -12,15 +12,22 @@ export const apiSlice = createApi({
   }),
   endpoints: (builder) => ({
     fetchArtworks: builder.query({
-      query: (query: string) => `collection?key=${API_KEY}&q=${query}`,
-    }),
-    fetchArtworksByMaker: builder.query({
-      query: (query: string) => `collection?key=${API_KEY}&involvedMaker=${query}`,
+      query: (query: string, ps?: number, p?: number) =>
+        `collection?key=${API_KEY}&q=${query}&imgonly=true&p=${p ?? 1}&ps=${ps ?? 50}&s=relevance`,
     }),
     fetchArtworksByHex: builder.query({
-      query: (query: string) => {
+      query: (query: string, ps?: number, p?: number) => {
         const encodedQuery = encodeURIComponent(query);
-        return `collection?key=${API_KEY}&f.normalized32Colors.hex=${encodedQuery}`;
+        return `collection?key=${API_KEY}&imgonly=true&f.normalized32Colors.hex=${encodedQuery}&p=${
+          p ?? 1
+        }&ps=${ps ?? 50}&s=relevance`;
+      },
+    }),
+    fetchArtworksByMaker: builder.query({
+      query: (query: string, ps?: number, p?: number) => {
+        return `collection?key=${API_KEY}&imgonly=true&involvedMaker=${query}&p=${p ?? 1}&ps=${
+          ps ?? 50
+        }&s=relevance`;
       },
     }),
     fetchArtworkById: builder.query({
@@ -32,6 +39,6 @@ export const apiSlice = createApi({
 export const {
   useFetchArtworksQuery,
   useFetchArtworkByIdQuery,
-  useFetchArtworksByHexQuery,
   useFetchArtworksByMakerQuery,
+  useFetchArtworksByHexQuery,
 } = apiSlice;
