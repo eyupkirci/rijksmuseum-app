@@ -17,6 +17,7 @@ function Home() {
   const dispatch = useDispatch();
 
   const { searchTerm, query } = useSelector((state: RootState) => state.app);
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const queryRef = useRef(query);
   const searchTermRef = useRef(searchTerm);
@@ -45,6 +46,9 @@ function Home() {
 
   return (
     <div className="grow w-full overflow-y-auto overflow-x-hidden p-1">
+      <p className="py-3">
+        Welcome <span className="text-gray-400"> {user?.email}</span>
+      </p>
       {(isSearchLoading || isImageResultsLoading) && (
         <p className="absolute w-full h-full flex items-center justify-center mt-2 text-center text-gray-500">
           Loading...

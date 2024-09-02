@@ -1,16 +1,44 @@
-function Header() {
+import { signOut } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setToken, setUser } from "../redux";
+import { debounce } from "lodash";
+import { auth } from "../firebase";
+
+const Header = () => {
+  const dispatch = useDispatch();
+  const { token } = useSelector((state: RootState) => state.auth);
+
+  const handleLogout = debounce(async () => {
+    console.log("logout");
+    try {
+      await signOut(auth);
+      dispatch(setUser({}));
+      dispatch(setToken(""));
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }, 1000);
+
   return (
-    <div className="grow-0 p-4 w-full bg-black text-white dark:text-white dark:bg-black flex justify-between items-center p-2">
+    <header className="grow-0 p-4 w-full bg-black text-white dark:text-white dark:bg-black flex justify-between items-center">
       <div>
         <a href="/" className="hover:text-orange-400 hover:scale-105">
           Rijks Museum
         </a>
       </div>
       <div>
-        <p>User</p>
+        {token && (
+          <ul>
+            <li
+              onClick={handleLogout}
+              className="cursor-pointer hover:text-orange-400 hover:scale-105">
+              Logout
+            </li>
+          </ul>
+        )}
       </div>
-    </div>
+    </header>
   );
-}
+};
 
 export default Header;
