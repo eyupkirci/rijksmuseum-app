@@ -17,14 +17,12 @@ function Home() {
   //global states
   const { user } = useSelector((state: RootState) => state.auth);
   const { query } = useSelector((state: RootState) => state.app);
-  console.log("🚀 ~ Home ~ query:", query);
 
   const queryRef = useRef(query);
 
   //states
   const [page, setPage] = useState(query.p as number);
-  console.log("🚀 ~ Home ~ page:", page);
-  const [queryData, setQueryData] = useState<ArtObject[]>([]);
+  const [localData, setlocalData] = useState<ArtObject[]>([]);
   const [search, setSearch] = useState<string>(query.q as string);
 
   //api result
@@ -33,25 +31,23 @@ function Home() {
   });
   const dataRef = useRef(data?.artObjects);
 
-  console.log("🚀 ~ Home ~ data:", data?.artObjects);
-  console.log("🚀 ~ Home ~ dataRef:", dataRef?.current?.length);
-
   const handleAddFilter = (value: string, key: string) => {
     const _query = { ...query, [key]: value, p: 1 };
     setPage(1);
+    setlocalData([]);
     dispatch(setQuery(_query));
   };
 
   const handleRemoveFilter = (key: string) => {
     const _query = { ...query, [key]: "", p: 1 };
     setPage(1);
+    setlocalData([]);
     dispatch(setQuery(_query));
     if (key === "q") setSearch("");
   };
 
   const handleScrollDebounce = debounce(() => {
     if (data?.count > dataRef.current.length) {
-      console.log("debounced");
       const newP = Number(page + 1);
       setPage(newP);
       dispatch(setQuery({ ...query, p: newP }));
@@ -62,9 +58,13 @@ function Home() {
   useEffect(() => {
     if (dataRef.current !== data?.artObjects) {
       if (queryRef?.current !== query) {
-        console.log("🚀 ~ useEffect ~ queryRef?.current !== query:", queryRef?.current !== query);
-        const _data = queryData?.concat(data.artObjects);
-        setQueryData(_data);
+        //filter existing data among new coming data
+        const newArtObjects = data.artObjects.filter(
+          (obj: ArtObject) => !localData.some((existingObj) => existingObj.id === obj.id)
+        );
+
+        const _data = localData?.concat(newArtObjects);
+        setlocalData(_data);
         queryRef.current = query;
         dataRef.current = _data;
       }
@@ -95,7 +95,7 @@ function Home() {
     };
   }, [page, isFetching, handleScrollDebounce]);
 
-  //gets initial data
+  //gets initial data when onload
   useEffect(() => {
     dispatch(setQuery({ ...query }));
   }, []);
@@ -107,15 +107,15 @@ function Home() {
         {/* SearchBar */}
         <SearchBar search={search} setSearch={setSearch} />
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
-        <SortBar />
+        <SortBar setlocalData={setlocalData} />
         {/* Search Results */}
-        {data?.artObjects?.length > 0 ? (
+        {localData?.length > 0 ? (
           <div
             id="card-container"
             className="text-center flex-col justify-center items-center gap-2 flex-wrap ">
             <h3 className="mt-4 text-xl text-center">{data?.count ?? 0} image found</h3>
             <div className="flex justify-center text-center flex-wrap  w-full gap-2">
-              {data?.artObjects?.map((result: ArtObject) => (
+              {localData?.map((result: ArtObject) => (
                 <Card key={result.id} data={result} />
               ))}
             </div>

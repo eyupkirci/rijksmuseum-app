@@ -1,18 +1,15 @@
-import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setQuery } from "../redux";
-import { TSortOptions } from "../types";
+import { ArtObject, TSortOptions } from "../types";
 
-const SortBar = () => {
+const SortBar = (setlocalData: React.Dispatch<React.SetStateAction<ArtObject[]>>) => {
   const dispatch = useDispatch();
   const { query } = useSelector((state: RootState) => state.app);
 
-  const handleSort = useCallback(
-    (sorter: string) => {
-      dispatch(setQuery({ ...query, s: sorter as TSortOptions }));
-    },
-    [query, dispatch]
-  );
+  const handleSort = (sorter: string) => {
+    dispatch(setQuery({ ...query, s: sorter as TSortOptions }));
+    setlocalData([]);
+  };
 
   return (
     <form className="p-4">
