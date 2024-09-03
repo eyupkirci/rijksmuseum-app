@@ -3,13 +3,13 @@ import { RootState, setQuery, useFetchUltimateArtworksQuery } from "../redux";
 import { ArtObject } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import Card from "../components/Card";
 import ColorPalette from "../components/ColorPalette";
-import FilterItem from "../components/Filter";
 import Makers from "../components/Makers";
 import Materials from "../components/Materials";
 import SortBar from "../components/SortBar";
 import { debounce } from "lodash";
+import CardList from "../components/CardList";
+import FilterList from "../components/FilterList";
 
 function Home() {
   const dispatch = useDispatch();
@@ -102,69 +102,23 @@ function Home() {
 
   return (
     <div className="grow w-full h-full overflow-y-auto overflow-x-hidden flex flex-col md:flex-row">
-      {/* Main Section */}
       <main id="main" className="overflow-auto overflow-y-auto flex-1 p-6 bg-gray-100">
-        {/* SearchBar */}
         <SearchBar search={search} setSearch={setSearch} />
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
         <SortBar setlocalData={setlocalData} />
-        {/* Search Results */}
-        {localData?.length > 0 ? (
-          <div
-            id="card-container"
-            className="text-center flex-col justify-center items-center gap-2 flex-wrap ">
-            <h3 className="mt-4 text-xl text-center">{data?.count ?? 0} image found</h3>
-            <div className="flex justify-center text-center flex-wrap  w-full gap-2">
-              {localData?.map((result: ArtObject) => (
-                <Card key={result.id} data={result} />
-              ))}
-            </div>
-          </div>
-        ) : query.q !== "" ? (
-          <h3 className="mt-4 text-xl text-center"> No image found</h3>
-        ) : undefined}
+        <CardList localData={localData} dataCount={data?.count} />
       </main>
 
-      {/* Filter Section */}
       <aside
         id="filter"
         className="overflow-y-auto overflow-x-hidden hidden md:block md:w-1/5 bg-gray-200 p-6">
-        {/* Welcome User */}
         <p className="py-3">
           Welcome <span className="text-gray-400"> {user?.email}</span>
         </p>
-        {/* Filter */}
         <div className="mt-4">
           <div className="block">
             <h4 className="mt-4 font-[700]">Filters</h4>
-            {query && (
-              <div className="flex flex-row gap-5">
-                {query.q && (
-                  <FilterItem data={query} filter={"q"} onClick={() => handleRemoveFilter("q")} />
-                )}
-                {query.color && (
-                  <FilterItem
-                    data={query}
-                    filter={"color"}
-                    onClick={() => handleRemoveFilter("color")}
-                  />
-                )}
-                {query.maker && (
-                  <FilterItem
-                    data={query}
-                    filter={"maker"}
-                    onClick={() => handleRemoveFilter("maker")}
-                  />
-                )}
-                {query.material && (
-                  <FilterItem
-                    data={query}
-                    filter={"material"}
-                    onClick={() => handleRemoveFilter("material")}
-                  />
-                )}
-              </div>
-            )}
+            <FilterList query={query} handleRemoveFilter={handleRemoveFilter} />
             <h4 className="mt-4 font-[700]">Main Color</h4>
             <ColorPalette onClick={handleAddFilter} data={data} />
             <h4 className="mt-4 font-[700]">PrincipalMakers</h4>
@@ -175,7 +129,6 @@ function Home() {
         </div>
       </aside>
 
-      {/*Loading */}
       {isLoading && (
         <p className="absolute w-full h-full flex items-center justify-center mt-2 text-center text-gray-500">
           Loading...

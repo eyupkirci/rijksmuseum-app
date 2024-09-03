@@ -1,8 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setQuery } from "../redux";
 import { ArtObject, TSortOptions } from "../types";
+import { Dispatch, SetStateAction } from "react";
 
-const SortBar = (setlocalData: React.Dispatch<React.SetStateAction<ArtObject[]>>) => {
+interface SortBarProps {
+  setlocalData: Dispatch<SetStateAction<ArtObject[]>>;
+}
+const SortBar = ({ setlocalData }: SortBarProps) => {
   const dispatch = useDispatch();
   const { query } = useSelector((state: RootState) => state.app);
 

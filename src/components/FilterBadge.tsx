@@ -1,12 +1,12 @@
 import { IQuery, QueryKeys } from "../types";
 
-interface IFilterItem {
+interface IFilterBadge {
   data: IQuery;
   filter: QueryKeys;
   onClick: () => void;
 }
 
-const FilterItem = ({ data, filter, onClick }: IFilterItem) => {
+const FilterBagde = ({ data, filter, onClick }: IFilterBadge) => {
   return (
     <span
       className="text-xs bg-orange-400 flex rounded"
@@ -26,4 +26,4 @@ const FilterItem = ({ data, filter, onClick }: IFilterItem) => {
   );
 };
 
-export default FilterItem;
+export default FilterBagde;
