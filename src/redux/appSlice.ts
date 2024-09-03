@@ -1,15 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface IQuery {
+  q?: string;
+  p?: number;
+  ps?: number;
+  color?: string;
+  maker?: string;
+}
 export interface AppState {
   isLoading: boolean;
-  query: string;
-  searchTerm: string;
+  query: IQuery;
 }
 
 const initialState: AppState = {
   isLoading: false,
-  query: "",
-  searchTerm: "",
+  query: { q: "", p: 1, ps: 20, color: "", maker: "" },
 };
 
 const appSlice = createSlice({
@@ -19,14 +24,11 @@ const appSlice = createSlice({
     setLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
-    setQuery(state, action: PayloadAction<string>) {
+    setQuery(state, action: PayloadAction<IQuery>) {
       state.query = action.payload;
-    },
-    setSearchTerm(state, action: PayloadAction<string>) {
-      state.searchTerm = action.payload;
     },
   },
 });
 
-export const { setLoading, setQuery, setSearchTerm } = appSlice.actions;
+export const { setLoading, setQuery } = appSlice.actions;
 export default appSlice.reducer;

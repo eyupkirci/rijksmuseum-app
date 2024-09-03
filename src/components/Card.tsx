@@ -10,10 +10,7 @@ function Card({ data, onClick }: { data: ArtObject; onClick: () => void }) {
     setImageLoaded(true);
   };
   return (
-    <div
-      key={data.id}
-      className="w-[300px] m-2 p-2 flex-col items-start justify-center text-center cursor-pointer"
-      onClick={onClick}>
+    <div key={data.id} className="w-[300px] m-2 p-2 items-center cursor-pointer" onClick={onClick}>
       {!imageLoaded && <Skeleton height={300} width={300} className="bg-gray-500" />}
 
       <img

@@ -24,3 +24,13 @@ export interface ArtObject {
   headerImage: ImageInfo;
   productionPlaces: string[];
 }
+
+export type FacetItem = {
+  key: string;
+  value?: number;
+};
+
+export type Facet = {
+  name: string;
+  facets: FacetItem[];
+};
