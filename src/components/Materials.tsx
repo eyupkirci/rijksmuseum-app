@@ -5,7 +5,7 @@ type UltimateResults = {
   facets: Facet[];
 };
 interface IMaterials {
-  onClick: (e: any, item: QueryKeys) => void;
+  onClick: (e: string, item: QueryKeys) => void;
   data: UltimateResults;
 }
 const Materials = ({ onClick, data }: IMaterials) => {
@@ -15,7 +15,10 @@ const Materials = ({ onClick, data }: IMaterials) => {
       {data?.facets[4]?.facets?.map((item, index) => {
         if (index < list) {
           return (
-            <p key={item.key} id={item?.key} onClick={(e) => onClick(e.target.id, "material")}>
+            <p
+              key={item.key}
+              id={item?.key}
+              onClick={(e) => onClick((e.target as HTMLElement).id, "material")}>
               {item.key}
             </p>
           );

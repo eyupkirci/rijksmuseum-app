@@ -11,7 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -21,9 +21,9 @@ const Login = () => {
 
       dispatch(
         setUser({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
+          uid: user?.uid,
+          email: user?.email,
+          displayName: user?.displayName,
         })
       );
 
@@ -31,7 +31,7 @@ const Login = () => {
       if (token) {
         dispatch(setToken(token));
       }
-    } catch (error: unknown) {
+    } catch (error: { message: string }) {
       setError("Failed to log in: " + error.message);
     }
   };

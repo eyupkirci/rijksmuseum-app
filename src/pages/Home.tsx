@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { RootState, setQuery, useFetchUltimateArtworksQuery } from "../redux";
 import { ArtObject } from "../types";
@@ -10,61 +9,114 @@ import FilterItem from "../components/Filter";
 import Makers from "../components/Makers";
 import Materials from "../components/Materials";
 import SortBar from "../components/SortBar";
+import { debounce } from "lodash";
 
 function Home() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { query } = useSelector((state: RootState) => state.app);
+  //global states
   const { user } = useSelector((state: RootState) => state.auth);
-
-  const [search, setSearch] = useState<string>(query.q as string);
+  const { query } = useSelector((state: RootState) => state.app);
+  console.log("🚀 ~ Home ~ query:", query);
 
   const queryRef = useRef(query);
 
-  const {
-    data: ultimateResults,
-    error,
-    isLoading,
-  } = useFetchUltimateArtworksQuery(query, {
+  //states
+  const [page, setPage] = useState(query.p as number);
+  console.log("🚀 ~ Home ~ page:", page);
+  const [queryData, setQueryData] = useState<ArtObject[]>([]);
+  const [search, setSearch] = useState<string>(query.q as string);
+
+  //api result
+  const { data, error, isLoading, isFetching } = useFetchUltimateArtworksQuery(query, {
     skip: query === queryRef.current,
   });
+  const dataRef = useRef(data?.artObjects);
 
-  const handleCardClick = (result: ArtObject) => {
-    navigate(`/${result?.objectNumber}`);
-    dispatch(setQuery({}));
-  };
+  console.log("🚀 ~ Home ~ data:", data?.artObjects);
+  console.log("🚀 ~ Home ~ dataRef:", dataRef?.current?.length);
 
   const handleAddFilter = (value: string, key: string) => {
-    dispatch(setQuery({ ...query, [key]: value }));
+    const _query = { ...query, [key]: value, p: 1 };
+    setPage(1);
+    dispatch(setQuery(_query));
   };
 
   const handleRemoveFilter = (key: string) => {
-    dispatch(setQuery({ ...query, [key]: "" }));
+    const _query = { ...query, [key]: "", p: 1 };
+    setPage(1);
+    dispatch(setQuery(_query));
     if (key === "q") setSearch("");
   };
 
+  const handleScrollDebounce = debounce(() => {
+    if (data?.count > dataRef.current.length) {
+      console.log("debounced");
+      const newP = Number(page + 1);
+      setPage(newP);
+      dispatch(setQuery({ ...query, p: newP }));
+    }
+  }, 1000);
+
+  //update data length
+  useEffect(() => {
+    if (dataRef.current !== data?.artObjects) {
+      if (queryRef?.current !== query) {
+        console.log("🚀 ~ useEffect ~ queryRef?.current !== query:", queryRef?.current !== query);
+        const _data = queryData?.concat(data.artObjects);
+        setQueryData(_data);
+        queryRef.current = query;
+        dataRef.current = _data;
+      }
+    }
+  }, [data]);
+
+  //checks if scrolled till the end of main container
+  useEffect(() => {
+    const main = document.getElementById("main");
+
+    const onScroll = () => {
+      if (main) {
+        const scrolledToBottom = main.scrollTop + main.clientHeight >= main.scrollHeight;
+        if (scrolledToBottom && !isFetching) {
+          handleScrollDebounce();
+        }
+      }
+    };
+
+    if (main) {
+      main.addEventListener("scroll", onScroll);
+    }
+
+    return () => {
+      if (main) {
+        main.removeEventListener("scroll", onScroll);
+      }
+    };
+  }, [page, isFetching, handleScrollDebounce]);
+
+  //gets initial data
   useEffect(() => {
     dispatch(setQuery({ ...query }));
   }, []);
 
   return (
-    <div className="grow w-full overflow-y-auto overflow-x-hidden flex flex-col md:flex-row">
+    <div className="grow w-full h-full overflow-y-auto overflow-x-hidden flex flex-col md:flex-row">
       {/* Main Section */}
-      <main className="overflow-y-auto overflow-x-hidden flex-1 p-6 bg-gray-100">
+      <main id="main" className="overflow-auto overflow-y-auto flex-1 p-6 bg-gray-100">
         {/* SearchBar */}
         <SearchBar search={search} setSearch={setSearch} />
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
         <SortBar />
         {/* Search Results */}
-        {ultimateResults?.artObjects?.length > 0 ? (
+        {data?.artObjects?.length > 0 ? (
           <div
             id="card-container"
             className="text-center flex-col justify-center items-center gap-2 flex-wrap ">
-            <h3 className="mt-4 text-xl text-center">{ultimateResults?.count ?? 0} image found</h3>
+            <h3 className="mt-4 text-xl text-center">{data?.count ?? 0} image found</h3>
             <div className="flex justify-center text-center flex-wrap  w-full gap-2">
-              {ultimateResults?.artObjects?.map((result: ArtObject) => (
-                <Card key={result.id} data={result} onClick={() => handleCardClick(result)} />
+              {data?.artObjects?.map((result: ArtObject) => (
+                <Card key={result.id} data={result} />
               ))}
             </div>
           </div>
@@ -74,13 +126,15 @@ function Home() {
       </main>
 
       {/* Filter Section */}
-      <aside className="hidden md:block md:w-1/5 bg-gray-200 p-6 overflow-y-auto overflow-x-hidden">
+      <aside
+        id="filter"
+        className="overflow-y-auto overflow-x-hidden hidden md:block md:w-1/5 bg-gray-200 p-6">
         {/* Welcome User */}
         <p className="py-3">
           Welcome <span className="text-gray-400"> {user?.email}</span>
         </p>
         {/* Filter */}
-        <div id="filter-container" className="mt-4">
+        <div className="mt-4">
           <div className="block">
             <h4 className="mt-4 font-[700]">Filters</h4>
             {query && (
@@ -111,12 +165,12 @@ function Home() {
                 )}
               </div>
             )}
-            <h4 className="mt-4 font-[700]">Colors</h4>
-            <ColorPalette onClick={handleAddFilter} data={ultimateResults} />
+            <h4 className="mt-4 font-[700]">Main Color</h4>
+            <ColorPalette onClick={handleAddFilter} data={data} />
             <h4 className="mt-4 font-[700]">PrincipalMakers</h4>
-            <Makers onClick={handleAddFilter} data={ultimateResults} />
+            <Makers onClick={handleAddFilter} data={data} />
             <h4 className="mt-4 font-[700]">Materials</h4>
-            <Materials onClick={handleAddFilter} data={ultimateResults} />
+            <Materials onClick={handleAddFilter} data={data} />
           </div>
         </div>
       </aside>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setQuery } from "../redux";
+import { initialQuery, RootState, setQuery } from "../redux";
 import { useEffect } from "react";
 
 interface ISearchBar {
@@ -12,7 +12,7 @@ const SearchBar = ({ search, setSearch }: ISearchBar) => {
   const { query } = useSelector((state: RootState) => state.app);
 
   const handleSearch = (s: string) => {
-    dispatch(setQuery({ ...query, q: s }));
+    dispatch(setQuery({ ...initialQuery, q: s }));
   };
 
   useEffect(() => {}, [query, dispatch]);

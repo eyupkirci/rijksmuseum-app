@@ -3,14 +3,18 @@ import { ArtObject } from "../types";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-function Card({ data, onClick }: { data: ArtObject; onClick: () => void }) {
+function Card({ data }: { data: ArtObject }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
   };
   return (
-    <div key={data.id} className="w-[300px] m-2 p-2 items-center cursor-pointer" onClick={onClick}>
+    <a
+      href={`${data?.objectNumber}`}
+      target="_blank"
+      key={data.id}
+      className="w-[300px] m-2 p-2 items-center cursor-pointer">
       {!imageLoaded && <Skeleton height={300} width={300} className="bg-gray-500" />}
 
       <img
@@ -25,11 +29,11 @@ function Card({ data, onClick }: { data: ArtObject; onClick: () => void }) {
 
       <div>
         <p className="text-center text-gray-700">{data?.title || <Skeleton />}</p>
-        <a href="#" className="text-xs text-center text-gray-400 capitalize hover:text-orange-400">
+        <p className="text-xs text-center text-gray-400 capitalize hover:text-orange-400">
           {data?.principalOrFirstMaker || <Skeleton />}
-        </a>
+        </p>
       </div>
-    </div>
+    </a>
   );
 }
 

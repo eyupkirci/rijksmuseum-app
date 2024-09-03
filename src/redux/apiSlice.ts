@@ -12,31 +12,12 @@ export const apiSlice = createApi({
     baseUrl: BASE_URL,
   }),
   endpoints: (builder) => ({
-    fetchArtworks: builder.query({
-      query: (query: string, ps?: number, p?: number) =>
-        `collection?key=${API_KEY}&q=${query}&imgonly=True&p=${p ?? 1}&ps=${ps ?? 50}&s=relevance`,
-    }),
-    fetchArtworksByHex: builder.query({
-      query: (query: string, ps?: number, p?: number) => {
-        const encodedQuery = encodeURIComponent(query);
-        return `collection?key=${API_KEY}&imgonly=True&f.normalized32Colors.hex=${encodedQuery}&p=${
-          p ?? 1
-        }&ps=${ps ?? 50}&s=relevance`;
-      },
-    }),
-    fetchArtworksByMaker: builder.query({
-      query: (query: string, ps?: number, p?: number) => {
-        return `collection?key=${API_KEY}&imgonly=True&involvedMaker=${query}&p=${p ?? 1}&ps=${
-          ps ?? 50
-        }&s=relevance`;
-      },
-    }),
     fetchArtworkById: builder.query({
       query: (id: string) => `collection/${id}?key=${API_KEY}`,
     }),
     fetchUltimateArtworks: builder.query({
       query: ({ q, ps, p, color, maker, material, s }: IQuery) => {
-        let base = `collection?key=${API_KEY}&imgonly=True&p=${p ?? 1}&ps=${ps ?? 20}`;
+        let base = `collection?key=${API_KEY}&imgonly=True&p=${p ?? 1}&ps=${ps ?? 10}`;
 
         if (q) {
           base += `&q=${q}`;
@@ -65,10 +46,4 @@ export const apiSlice = createApi({
   }),
 });
 
-export const {
-  useFetchArtworksQuery,
-  useFetchArtworkByIdQuery,
-  useFetchArtworksByMakerQuery,
-  useFetchArtworksByHexQuery,
-  useFetchUltimateArtworksQuery,
-} = apiSlice;
+export const { useFetchArtworkByIdQuery, useFetchUltimateArtworksQuery } = apiSlice;

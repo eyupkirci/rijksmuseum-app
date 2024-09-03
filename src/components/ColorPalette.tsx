@@ -6,13 +6,13 @@ type UltimateResults = {
 
 interface IColorPalette {
   data: UltimateResults;
-  onClick: (e: unknown, item: string) => void;
+  onClick: (e: string, item: string) => void;
 }
 const ColorPalette = ({ data, onClick }: IColorPalette) => {
   return (
     <div
       className="max-w-max grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8"
-      onClick={(e) => onClick(e.target.id, "color")}>
+      onClick={(e) => onClick((e.target as HTMLElement).id, "color")}>
       {data?.facets[6]?.facets?.map((item) => {
         const bg = item?.key.trim();
         return (

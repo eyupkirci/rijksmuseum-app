@@ -5,7 +5,7 @@ type UltimateResults = {
   facets: Facet[];
 };
 interface IMakers {
-  onClick: (e: any, item: string) => void;
+  onClick: (e: string, item: string) => void;
   data: UltimateResults;
 }
 const Makers = ({ onClick, data }: IMakers) => {
@@ -15,7 +15,10 @@ const Makers = ({ onClick, data }: IMakers) => {
       {data?.facets[0]?.facets?.map((item, index) => {
         if (index < list) {
           return (
-            <p key={item.key} id={item?.key} onClick={(e) => onClick(e.target.id, "maker")}>
+            <p
+              key={item.key}
+              id={item?.key}
+              onClick={(e) => onClick((e.target as HTMLElement).id, "maker")}>
               {item.key}
             </p>
           );

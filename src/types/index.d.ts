@@ -55,4 +55,5 @@ export type QueryKeys = keyof IQuery;
 export interface AppState {
   isLoading: boolean;
   query: IQuery;
+  data: ArtObject[];
 }

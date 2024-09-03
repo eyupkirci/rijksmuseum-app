@@ -1,9 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppState, IQuery } from "../types";
+import { AppState, ArtObject, IQuery } from "../types";
 
-const initialState: AppState = {
+export const initialQuery: IQuery = {
+  q: "",
+  p: 1,
+  ps: 10,
+  color: "",
+  maker: "",
+  material: "",
+  s: "relevance",
+};
+export const initialState: AppState = {
   isLoading: false,
-  query: { q: "", p: 1, ps: 20, color: "", maker: "", material: "", s: "relevance" },
+  query: { ...initialQuery },
+  data: [],
 };
 
 const appSlice = createSlice({
@@ -16,8 +26,11 @@ const appSlice = createSlice({
     setQuery(state, action: PayloadAction<IQuery>) {
       state.query = action.payload;
     },
+    setData(state, action: PayloadAction<ArtObject[]>) {
+      state.data = action.payload;
+    },
   },
 });
 
-export const { setLoading, setQuery } = appSlice.actions;
+export const { setLoading, setQuery, setData } = appSlice.actions;
 export default appSlice.reducer;

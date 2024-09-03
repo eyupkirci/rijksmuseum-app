@@ -4,10 +4,11 @@ export interface AuthState {
   token: string;
   user: { email?: string; uid?: string; displayName?: string };
 }
+export const initialUser = { email: "", uid: "", displayName: "" };
 
 const initialState: AuthState = {
   token: "",
-  user: {},
+  user: { ...initialUser },
 };
 const authSlice = createSlice({
   name: "auth",

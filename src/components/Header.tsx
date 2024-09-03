@@ -1,6 +1,6 @@
 import { signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setToken, setUser } from "../redux";
+import { initialQuery, RootState, setData, setQuery, setToken, setUser } from "../redux";
 import { debounce } from "lodash";
 import { auth } from "../firebase";
 
@@ -14,6 +14,8 @@ const Header = () => {
       await signOut(auth);
       dispatch(setUser({}));
       dispatch(setToken(""));
+      dispatch(setQuery(initialQuery));
+      dispatch(setData([]));
     } catch (error) {
       console.error("Logout failed:", error);
     }

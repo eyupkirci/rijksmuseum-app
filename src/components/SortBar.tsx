@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setQuery } from "../redux";
+import { TSortOptions } from "../types";
 
 const SortBar = () => {
   const dispatch = useDispatch();
@@ -8,8 +9,7 @@ const SortBar = () => {
 
   const handleSort = useCallback(
     (sorter: string) => {
-      //@ts-expect-error string | undefined
-      dispatch(setQuery({ ...query, s: sorter }));
+      dispatch(setQuery({ ...query, s: sorter as TSortOptions }));
     },
     [query, dispatch]
   );
