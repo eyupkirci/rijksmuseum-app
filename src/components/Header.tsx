@@ -9,15 +9,15 @@ const Header = () => {
   const { token } = useSelector((state: RootState) => state.auth);
 
   const handleLogout = debounce(async () => {
-    console.log("logout");
     try {
       await signOut(auth);
       dispatch(setUser({}));
       dispatch(setToken(""));
       dispatch(setQuery(initialQuery));
       dispatch(setData([]));
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Logout failed:", error);
+      /* empty */
     }
   }, 1000);
 

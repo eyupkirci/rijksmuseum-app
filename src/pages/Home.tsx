@@ -7,7 +7,7 @@ import ColorPalette from "../components/ColorPalette";
 import Makers from "../components/Makers";
 import Materials from "../components/Materials";
 import SortBar from "../components/SortBar";
-import { debounce } from "lodash";
+import { debounce, throttle } from "lodash";
 import CardList from "../components/CardList";
 import FilterList from "../components/FilterList";
 
@@ -16,7 +16,7 @@ function Home() {
 
   //global states
   const { user } = useSelector((state: RootState) => state.auth);
-  const { query } = useSelector((state: RootState) => state.app);
+  const { query, isLoading } = useSelector((state: RootState) => state.app);
 
   const queryRef = useRef(query);
 
@@ -26,7 +26,7 @@ function Home() {
   const [search, setSearch] = useState<string>(query.q as string);
 
   //api result
-  const { data, error, isLoading, isFetching } = useFetchUltimateArtworksQuery(query, {
+  const { data, error, isFetching } = useFetchUltimateArtworksQuery(query, {
     skip: query === queryRef.current,
   });
   const dataRef = useRef(data?.artObjects);
@@ -46,7 +46,7 @@ function Home() {
     if (key === "q") setSearch("");
   };
 
-  const handleScrollDebounce = debounce(() => {
+  const handleScroll = throttle(() => {
     if (data?.count > dataRef.current.length) {
       const newP = Number(page + 1);
       setPage(newP);
@@ -71,29 +71,31 @@ function Home() {
     }
   }, [data]);
 
+  // Ref for main container
+  const mainRef = useRef<HTMLDivElement>(null);
   //checks if scrolled till the end of main container
   useEffect(() => {
-    const main = document.getElementById("main");
-
     const onScroll = () => {
-      if (main) {
-        const scrolledToBottom = main.scrollTop + main.clientHeight >= main.scrollHeight;
+      if (mainRef.current) {
+        const scrolledToBottom =
+          mainRef.current.scrollTop + mainRef.current.clientHeight >= mainRef.current.scrollHeight;
         if (scrolledToBottom && !isFetching) {
-          handleScrollDebounce();
+          handleScroll();
         }
       }
     };
 
-    if (main) {
-      main.addEventListener("scroll", onScroll);
+    const mainElement = mainRef.current;
+    if (mainElement) {
+      mainElement.addEventListener("scroll", onScroll);
     }
 
     return () => {
-      if (main) {
-        main.removeEventListener("scroll", onScroll);
+      if (mainElement) {
+        mainElement.removeEventListener("scroll", onScroll);
       }
     };
-  }, [page, isFetching, handleScrollDebounce]);
+  }, [page, isFetching, handleScroll]);
 
   //gets initial data when onload
   useEffect(() => {
@@ -102,7 +104,10 @@ function Home() {
 
   return (
     <div className="grow w-full h-full overflow-y-auto overflow-x-hidden flex flex-col md:flex-row">
-      <main id="main" className="overflow-auto overflow-y-auto flex-1 p-6 bg-gray-100">
+      <main
+        id="main"
+        ref={mainRef}
+        className="overflow-auto overflow-y-auto flex-1 p-6 bg-gray-100">
         <SearchBar search={search} setSearch={setSearch} />
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
         <SortBar setlocalData={setlocalData} />
