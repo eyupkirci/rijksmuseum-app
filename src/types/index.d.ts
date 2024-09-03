@@ -34,3 +34,25 @@ export type Facet = {
   name: string;
   facets: FacetItem[];
 };
+
+export type TSortOptions =
+  | "relevance"
+  | "objecttype"
+  | "chronologic"
+  | "achronologic"
+  | "artist"
+  | "artistdesc";
+export interface IQuery {
+  q?: string;
+  p?: number;
+  ps?: number;
+  color?: string;
+  maker?: string;
+  material?: string;
+  s?: TSortOptions;
+}
+export type QueryKeys = keyof IQuery;
+export interface AppState {
+  isLoading: boolean;
+  query: IQuery;
+}

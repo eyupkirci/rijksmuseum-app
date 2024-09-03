@@ -8,6 +8,8 @@ import Card from "../components/Card";
 import ColorPalette from "../components/ColorPalette";
 import FilterItem from "../components/Filter";
 import Makers from "../components/Makers";
+import Materials from "../components/Materials";
+import SortBar from "../components/SortBar";
 
 function Home() {
   const navigate = useNavigate();
@@ -27,26 +29,19 @@ function Home() {
   } = useFetchUltimateArtworksQuery(query, {
     skip: query === queryRef.current,
   });
-  console.log("🚀 ~ Home ~ ultimateResults:", ultimateResults);
 
   const handleCardClick = (result: ArtObject) => {
     navigate(`/${result?.objectNumber}`);
     dispatch(setQuery({}));
   };
 
-  const handleColorFilter = (e: any) => {
-    console.log(e.target.id);
-    dispatch(setQuery({ ...query, color: e.target.id }));
+  const handleAddFilter = (value: string, key: string) => {
+    dispatch(setQuery({ ...query, [key]: value }));
   };
 
-  const handleMakerFilter = (e) => {
-    console.log("Makers", e.target.id);
-    dispatch(setQuery({ ...query, maker: e.target.id }));
-  };
-
-  const handleCloseClick = (item: string) => {
-    dispatch(setQuery({ ...query, [item]: "" }));
-    if (item === "q") setSearch("");
+  const handleRemoveFilter = (key: string) => {
+    dispatch(setQuery({ ...query, [key]: "" }));
+    if (key === "q") setSearch("");
   };
 
   useEffect(() => {
@@ -60,7 +55,7 @@ function Home() {
         {/* SearchBar */}
         <SearchBar search={search} setSearch={setSearch} />
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
-
+        <SortBar />
         {/* Search Results */}
         {ultimateResults?.artObjects?.length > 0 ? (
           <div
@@ -91,28 +86,37 @@ function Home() {
             {query && (
               <div className="flex flex-row gap-5">
                 {query.q && (
-                  <FilterItem data={query} filter={"q"} onClick={() => handleCloseClick("q")} />
+                  <FilterItem data={query} filter={"q"} onClick={() => handleRemoveFilter("q")} />
                 )}
                 {query.color && (
                   <FilterItem
                     data={query}
                     filter={"color"}
-                    onClick={() => handleCloseClick("color")}
+                    onClick={() => handleRemoveFilter("color")}
                   />
                 )}
                 {query.maker && (
                   <FilterItem
                     data={query}
                     filter={"maker"}
-                    onClick={() => handleCloseClick("maker")}
+                    onClick={() => handleRemoveFilter("maker")}
+                  />
+                )}
+                {query.material && (
+                  <FilterItem
+                    data={query}
+                    filter={"material"}
+                    onClick={() => handleRemoveFilter("material")}
                   />
                 )}
               </div>
             )}
             <h4 className="mt-4 font-[700]">Colors</h4>
-            <ColorPalette handleColorFilter={handleColorFilter} data={ultimateResults} />
+            <ColorPalette onClick={handleAddFilter} data={ultimateResults} />
             <h4 className="mt-4 font-[700]">PrincipalMakers</h4>
-            <Makers handleMakerFilter={handleMakerFilter} data={ultimateResults} />
+            <Makers onClick={handleAddFilter} data={ultimateResults} />
+            <h4 className="mt-4 font-[700]">Materials</h4>
+            <Materials onClick={handleAddFilter} data={ultimateResults} />
           </div>
         </div>
       </aside>

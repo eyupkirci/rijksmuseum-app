@@ -17,7 +17,7 @@ function Card({ data, onClick }: { data: ArtObject; onClick: () => void }) {
         src={data?.webImage?.url}
         alt={data?.title}
         width={300}
-        className={`w-[300px] h-[300px] object-cover duration-300 hover:scale-90 ${
+        className={`w-[300px] h-[300px] rounded-lg object-cover duration-300 hover:scale-90 ${
           imageLoaded ? "block" : "hidden"
         }`}
         onLoad={handleImageLoad}

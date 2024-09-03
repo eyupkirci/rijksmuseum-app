@@ -1,20 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface IQuery {
-  q?: string;
-  p?: number;
-  ps?: number;
-  color?: string;
-  maker?: string;
-}
-export interface AppState {
-  isLoading: boolean;
-  query: IQuery;
-}
+import { AppState, IQuery } from "../types";
 
 const initialState: AppState = {
   isLoading: false,
-  query: { q: "", p: 1, ps: 20, color: "", maker: "" },
+  query: { q: "", p: 1, ps: 20, color: "", maker: "", material: "", s: "relevance" },
 };
 
 const appSlice = createSlice({

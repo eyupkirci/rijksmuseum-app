@@ -1,8 +1,8 @@
-import { IQuery } from "../redux";
+import { IQuery, QueryKeys } from "../types";
 
 interface IFilterItem {
   data: IQuery;
-  filter: "q" | "color" | "maker";
+  filter: QueryKeys;
   onClick: () => void;
 }
 

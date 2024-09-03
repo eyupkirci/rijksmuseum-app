@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface AuthState {
   token: string;
-  user: unknown;
+  user: { email?: string; uid?: string; displayName?: string };
 }
 
 const initialState: AuthState = {
