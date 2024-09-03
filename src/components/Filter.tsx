@@ -9,15 +9,15 @@ interface IFilterItem {
 const FilterItem = ({ data, filter, onClick }: IFilterItem) => {
   return (
     <span
-      className="text-xs bg-orange-400 flex rounded w-min"
+      className="text-xs bg-orange-400 flex rounded"
       style={{ backgroundColor: filter === "color" ? data.color : "" }}>
       {filter === "color" ? (
         <p className="rounded border-orange-400 p-2 m-2"></p>
       ) : (
-        <p className="p-2 w-min">{data[filter]}</p>
+        <p className="p-2">{data[filter]}</p>
       )}
       <img
-        className=" w-[16px] h-[16px] cursor-pointer hover:scale-110"
+        className="w-[16px] h-[16px] cursor-pointer hover:scale-110 pt-1 pr-1"
         src="src/assets/close-icon.svg"
         alt=""
         onClick={onClick}

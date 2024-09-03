@@ -11,7 +11,7 @@ interface IColorPalette {
 const ColorPalette = ({ data, handleColorFilter }: IColorPalette) => {
   return (
     <div
-      className="max-w-max grid grid-cols-6 md:grid-cols-12 sm:grid-cols-9"
+      className="max-w-max grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8"
       onClick={handleColorFilter}>
       {data?.facets[6]?.facets?.map((item) => {
         const bg = item?.key.trim();
