@@ -16,13 +16,13 @@ const SortBar = ({ setlocalData }: SortBarProps) => {
   };
 
   return (
-    <form className="p-4">
+    <form className="flex flex-col justify-center items-center mt-2 rounded-lg">
       <select
         onChange={(e) => {
           handleSort(e.target.value);
         }}
         id="underline_select"
-        className="p-4 text-center w-full relative sm:max-w-96 text-gray-400">
+        className="py-2 px-3 text-sm text-gray-400">
         <option defaultValue={"relevance"} value="relevance">
           Sort results on relevance.
         </option>

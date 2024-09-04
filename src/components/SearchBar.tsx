@@ -1,21 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
-import { initialQuery, RootState, setQuery } from "../redux";
-import { useEffect } from "react";
-
+import { useSelector } from "react-redux";
+import { RootState } from "../redux";
+import { useEffect, useState } from "react";
+import { useDebounce } from "../hooks/useDebounce";
 interface ISearchBar {
-  search: string;
-  setSearch: (e: string) => void;
+  handleAddFilter: (value: string, key: string) => void;
 }
-const SearchBar = ({ search, setSearch }: ISearchBar) => {
-  const dispatch = useDispatch();
-
+const SearchBar: React.FC<ISearchBar> = ({ handleAddFilter }) => {
   const { query } = useSelector((state: RootState) => state.app);
+  const [term, setTerm] = useState<string>("");
+  const debouncedTerm = useDebounce(term, 500);
 
-  const handleSearch = (s: string) => {
-    dispatch(setQuery({ ...initialQuery, q: s }));
-  };
-
-  useEffect(() => {}, [query, dispatch]);
+  useEffect(() => {
+    handleAddFilter(debouncedTerm, "q");
+  }, [debouncedTerm]);
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -24,11 +21,8 @@ const SearchBar = ({ search, setSearch }: ISearchBar) => {
           type="text"
           placeholder="Search..."
           className="ps-4 py-3 w-full border border-solid rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onChange={(e) => {
-            handleSearch(e.target.value);
-            setSearch(e.target.value);
-          }}
-          value={search}
+          onChange={(e) => setTerm(e.target.value)}
+          value={term}
         />
         {!query.q && <p className="text-sm text-gray-700">Type to search from Rijks Museum</p>}
       </div>

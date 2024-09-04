@@ -7,17 +7,27 @@ interface IFilterBadge {
 }
 
 const FilterBagde = ({ data, filter, onClick }: IFilterBadge) => {
+  if (filter === "color") {
+    return (
+      <div className="flex">
+        <span
+          className="w-[1rem] h-[1rem] px-2 rounded"
+          style={{ backgroundColor: data.color }}></span>
+        <img
+          className="p-[3px] w-[1rem] h-[1rem] rounded cursor-pointer hover:bg-orange-400"
+          src="src/assets/close-icon.svg"
+          alt=""
+          onClick={onClick}
+        />
+      </div>
+    );
+  }
+
   return (
-    <span
-      className="text-xs bg-orange-400 flex rounded"
-      style={{ backgroundColor: filter === "color" ? data.color : "" }}>
-      {filter === "color" ? (
-        <p className="rounded border-orange-400 p-2 m-2"></p>
-      ) : (
-        <p className="p-2">{data[filter]}</p>
-      )}
+    <span className="flex">
+      <p className="text-xs rounded p-1 bg-orange-400">{data[filter]}</p>
       <img
-        className="w-[16px] h-[16px] cursor-pointer hover:scale-110 pt-1 pr-1"
+        className="p-[3px] w-[1rem] h-[1rem] rounded cursor-pointer hover:bg-orange-400"
         src="src/assets/close-icon.svg"
         alt=""
         onClick={onClick}

@@ -7,7 +7,7 @@ import ColorPalette from "../components/ColorPalette";
 import Makers from "../components/Makers";
 import Materials from "../components/Materials";
 import SortBar from "../components/SortBar";
-import { debounce, throttle } from "lodash";
+import { throttle } from "lodash";
 import CardList from "../components/CardList";
 import FilterList from "../components/FilterList";
 
@@ -23,13 +23,12 @@ function Home() {
   //states
   const [page, setPage] = useState(query.p as number);
   const [localData, setlocalData] = useState<ArtObject[]>([]);
-  const [search, setSearch] = useState<string>(query.q as string);
 
   //api result
   const { data, error, isFetching } = useFetchUltimateArtworksQuery(query, {
     skip: query === queryRef.current,
   });
-  const dataRef = useRef(data?.artObjects);
+  const dataRef = useRef(data?.artObjects ?? []);
 
   const handleAddFilter = (value: string, key: string) => {
     const _query = { ...query, [key]: value, p: 1 };
@@ -43,7 +42,6 @@ function Home() {
     setPage(1);
     setlocalData([]);
     dispatch(setQuery(_query));
-    if (key === "q") setSearch("");
   };
 
   const handleScroll = throttle(() => {
@@ -108,7 +106,7 @@ function Home() {
         id="main"
         ref={mainRef}
         className="overflow-auto overflow-y-auto flex-1 p-6 bg-gray-100">
-        <SearchBar search={search} setSearch={setSearch} />
+        <SearchBar handleAddFilter={handleAddFilter} />
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
         <SortBar setlocalData={setlocalData} />
         <CardList localData={localData} dataCount={data?.count} />

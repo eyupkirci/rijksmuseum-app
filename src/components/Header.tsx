@@ -1,25 +1,23 @@
 import { signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { initialQuery, RootState, setData, setQuery, setToken, setUser } from "../redux";
-import { debounce } from "lodash";
+import { RootState, setToken } from "../redux";
 import { auth } from "../firebase";
 
 const Header = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state: RootState) => state.auth);
 
-  const handleLogout = debounce(async () => {
+  const handleLogout = async () => {
     try {
       await signOut(auth);
-      dispatch(setUser({}));
+
       dispatch(setToken(""));
-      dispatch(setQuery(initialQuery));
-      dispatch(setData([]));
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       /* empty */
     }
-  }, 1000);
+  };
 
   return (
     <header className="grow-0 p-4 w-full bg-black text-white dark:text-white dark:bg-black flex justify-between items-center">
