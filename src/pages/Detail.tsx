@@ -23,9 +23,9 @@ function Detail() {
         <p>Loading</p>
       ) : (
         <>
-          <div className="h-[400px] overflow-y-hidden">
+          <div className="h-[50vh] overflow-y-hidden">
             <img
-              className="h-[400px] w-full transition delay-150 duration-700 ease-in-out object-scale-down hover:scale-150"
+              className="h-[50vh] w-full transition delay-150 duration-700 ease-in-out object-scale-down hover:scale-150"
               src={data?.artObject?.webImage?.url ?? "src/assets/default-card-image.svg"}
               alt={data?.artObject?.title}
             />

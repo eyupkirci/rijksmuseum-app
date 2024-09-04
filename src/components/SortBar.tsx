@@ -16,17 +16,17 @@ const SortBar = ({ setlocalData }: SortBarProps) => {
   };
 
   return (
-    <form className="flex flex-col justify-center items-center mt-2 rounded-lg">
+    <form className="flex flex-col justify-center items-center mt-2 ">
       <select
         onChange={(e) => {
           handleSort(e.target.value);
         }}
         id="underline_select"
-        className="py-2 px-3 text-sm text-gray-400">
-        <option defaultValue={"relevance"} value="relevance">
+        className="py-2 px-3 text-sm text-gray-400 rounded">
+        <option defaultValue="relevance" value="relevance">
           Sort results on relevance.
         </option>
-        <option value="objecttype">Sort results on onject type.</option>
+        <option value="objecttype">Sort results on object type.</option>
         <option value="chronologic">Sort results chronologically - ASC.</option>
         <option value="achronologic">Sort results chronologically - DESC</option>
         <option value="artist">Sort results on artist (a-z).</option>

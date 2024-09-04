@@ -10,6 +10,7 @@ import SortBar from "../components/SortBar";
 import { throttle } from "lodash";
 import CardList from "../components/CardList";
 import FilterList from "../components/FilterList";
+import useInfiniteScroll from "../hooks/useInfiniteScroll";
 
 function Home() {
   const dispatch = useDispatch();
@@ -71,29 +72,9 @@ function Home() {
 
   // Ref for main container
   const mainRef = useRef<HTMLDivElement>(null);
+
   //checks if scrolled till the end of main container
-  useEffect(() => {
-    const onScroll = () => {
-      if (mainRef.current) {
-        const scrolledToBottom =
-          mainRef.current.scrollTop + mainRef.current.clientHeight >= mainRef.current.scrollHeight;
-        if (scrolledToBottom && !isFetching) {
-          handleScroll();
-        }
-      }
-    };
-
-    const mainElement = mainRef.current;
-    if (mainElement) {
-      mainElement.addEventListener("scroll", onScroll);
-    }
-
-    return () => {
-      if (mainElement) {
-        mainElement.removeEventListener("scroll", onScroll);
-      }
-    };
-  }, [page, isFetching, handleScroll]);
+  useInfiniteScroll(handleScroll, isFetching, mainRef);
 
   //gets initial data when onload
   useEffect(() => {

@@ -16,6 +16,7 @@ const Makers = ({ onClick, data }: IMakers) => {
         if (index < list) {
           return (
             <p
+              className="hover:text-orange-400"
               key={item.key}
               id={item?.key}
               onClick={(e) => onClick((e.target as HTMLElement).id, "maker")}>
@@ -25,7 +26,9 @@ const Makers = ({ onClick, data }: IMakers) => {
         }
       })}
       {data?.facets[0]?.facets.length > 10 && (
-        <span onClick={() => setList(list + 10)}>... More</span>
+        <span onClick={() => setList(list + 10)} className="hover:text-orange-400">
+          ... More
+        </span>
       )}
     </div>
   );

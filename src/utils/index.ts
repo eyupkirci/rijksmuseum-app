@@ -30,3 +30,11 @@ export const rgbToHex = (r: number, g: number, b: number) => {
   };
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 };
+
+export const capitalize = (text: string): string => {
+  if (!text) return "";
+  return text
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
