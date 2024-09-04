@@ -78,6 +78,7 @@ Here’s a breakdown of the technologies I used to bring this project to life:
 - **User Favorites**: Allow users to save and manage their favorite artworks.
 - **Social Authentication**: Make it possible for users to sign in with Google or other social accounts.
 - **Theme**: Add detailed dark/light mode theme
+- **Test**: Add tests to ensure the app robust
 
 ---
 
