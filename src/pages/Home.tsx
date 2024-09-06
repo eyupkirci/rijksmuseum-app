@@ -1,5 +1,5 @@
 import SearchBar from "../components/SearchBar";
-import { RootState, setQuery, useFetchUltimateArtworksQuery } from "../redux";
+import { RootState, setLoading, setQuery, useFetchUltimateArtworksQuery } from "../redux";
 import { ArtObject } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
@@ -11,6 +11,7 @@ import { throttle } from "lodash";
 import CardList from "../components/CardList";
 import FilterList from "../components/FilterList";
 import useInfiniteScroll from "../hooks/useInfiniteScroll";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function Home() {
   const dispatch = useDispatch();
@@ -81,6 +82,10 @@ function Home() {
     dispatch(setQuery({ ...query }));
   }, []);
 
+  useEffect(() => {
+    dispatch(setLoading(isFetching));
+  }, [isFetching, dispatch]);
+
   return (
     <div className="grow w-full h-full overflow-y-auto overflow-x-hidden flex flex-col md:flex-row">
       <main
@@ -91,6 +96,7 @@ function Home() {
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
         <SortBar setlocalData={setlocalData} />
         <CardList localData={localData} dataCount={data?.count} />
+        {isLoading && <LoadingSpinner />}
       </main>
 
       <aside
@@ -112,12 +118,6 @@ function Home() {
           </div>
         </div>
       </aside>
-
-      {isLoading && (
-        <p className="absolute w-full h-full flex items-center justify-center mt-2 text-center text-gray-500">
-          Loading...
-        </p>
-      )}
     </div>
   );
 }
