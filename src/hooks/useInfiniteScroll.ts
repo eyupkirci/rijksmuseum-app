@@ -10,12 +10,13 @@ const useInfiniteScroll = (
     const handleScroll = debounce(() => {
       if (ref.current) {
         const scrolledToBottom =
-          ref.current.scrollTop + ref.current.clientHeight >= ref.current.scrollHeight;
+          ref.current.scrollTop + ref.current.clientHeight >= ref.current.scrollHeight - 5;
+
         if (scrolledToBottom && !isFetching) {
           fetchData();
         }
       }
-    }, 300);
+    }, 1000);
 
     const refElement = ref.current;
 
