@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useFetchArtworkByIdQuery } from "../redux";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const InfoText = ({ info, title }: { info: string | string[]; title: string }) => {
   return (
@@ -20,7 +21,7 @@ function Detail() {
   return (
     <div className="grow w-full overflow-y-auto overflow-x-hidden text-enter p-2">
       {isLoading ? (
-        <p>Loading</p>
+        <LoadingSpinner />
       ) : (
         <>
           <div className="h-[50vh] overflow-y-hidden">
