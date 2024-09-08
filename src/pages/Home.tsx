@@ -1,5 +1,5 @@
 import SearchBar from "../components/SearchBar";
-import { RootState, setLoading, setQuery, useFetchUltimateArtworksQuery } from "../redux";
+import { RootState, setQuery, useFetchUltimateArtworksQuery } from "../redux";
 import { ArtObject } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +18,7 @@ function Home() {
 
   //global states
   const { user } = useSelector((state: RootState) => state.auth);
-  const { query, isLoading } = useSelector((state: RootState) => state.app);
+  const { query } = useSelector((state: RootState) => state.app);
 
   const queryRef = useRef(query);
 
@@ -74,6 +74,9 @@ function Home() {
   // Ref for main container
   const mainRef = useRef<HTMLDivElement>(null);
 
+  // Ref for search container
+  const searchRef = useRef<HTMLDivElement>(null);
+
   //checks if scrolled till the end of main container
   useInfiniteScroll(handleScroll, isFetching, mainRef);
 
@@ -82,21 +85,43 @@ function Home() {
     dispatch(setQuery({ ...query }));
   }, []);
 
-  useEffect(() => {
-    dispatch(setLoading(isFetching));
-  }, [isFetching, dispatch]);
+  //to display spinner when fetching and back to top button
+  useEffect(() => {}, [isFetching, dispatch]);
 
   return (
-    <div className="grow w-full h-full overflow-y-auto overflow-x-hidden flex flex-col md:flex-row">
+    <div className="grow w-full h-full overflow-y-auto overflow-x-hidden flex flex-col md:flex-row scroll-smooth">
       <main
         id="main"
         ref={mainRef}
         className="overflow-auto overflow-y-auto flex-1 p-6 bg-gray-100">
-        <SearchBar handleAddFilter={handleAddFilter} />
+        <div ref={searchRef}>
+          <SearchBar handleAddFilter={handleAddFilter} />
+        </div>
         {error && <p className="py-2 text-gray-500">Something went wrong</p>}
         <SortBar setlocalData={setlocalData} />
         <CardList localData={localData} dataCount={data?.count} />
-        {isLoading && <LoadingSpinner />}
+        {isFetching && <LoadingSpinner />}
+
+        {mainRef?.current?.scrollTop > 70 && (
+          <button
+            onClick={() => {
+              mainRef.current.scrollTop = 0;
+            }}
+            className="p-1 rounded-full fixed bottom-16 left-0 bg-transparent hover:opacity-75 focus:opacity-25">
+            <svg
+              className="h-8 w-8 text-gray-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"
+              />
+            </svg>
+          </button>
+        )}
       </main>
 
       <aside
