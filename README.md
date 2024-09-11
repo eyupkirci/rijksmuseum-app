@@ -90,7 +90,7 @@ function grouppedAnagrams(words: string[]): string[][] {
 
   for (const word of words) {
     // sanitized keyword is used as to create an anagram group of which expected output looks like map-like object values method call result
-    const sanitizedWord = word.replace(/\s+/g, "").toLowerCase().split("").sort().join("");
+    const sanitizedWord = word.toLowerCase().split("").sort().join("");
 
     // checks if an anagram grup is exist
     if (map.has(sanitizedWord)) {
